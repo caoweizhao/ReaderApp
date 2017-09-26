@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@drawable/ic_book_shelf"
+        id="@+id/tab_book_shelf_page"
+        title="@string/book_shelf_page"/>
+    <tab
+        icon="@drawable/ic_book"
+        id="@+id/tab_book_page"
+        title="@string/book_page"/>5[
+    <tab
+        icon="@drawable/ic_myself"
+        id="@+id/tab_myself"
+        title="@string/myself_page"/>
+
+</tabs>

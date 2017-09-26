@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="self_page_text_padding_vertical">15dp</dimen>
+    <dimen name="self_page_text_padding_left">20dp</dimen>
+    <dimen name="self_page_text_size">16sp</dimen>
+    <dimen name="book_shelf_title_text_size">18sp</dimen>
+</resources>
