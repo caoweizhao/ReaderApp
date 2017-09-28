@@ -3,6 +3,9 @@ package com.example.caoweizhao.readerapp.mvp.view;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.example.caoweizhao.readerapp.R;
 import com.example.caoweizhao.readerapp.adapter.ViewPagerAdapter;
@@ -25,6 +28,10 @@ public class MainActivity extends BaseActivity {
     ViewPager mViewPager;
     @BindView(R.id.bottom_bar)
     BottomBar mBottomBar;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.title_text)
+    TextView mTitle;
 
     ViewPagerAdapter mAdapter;
 
@@ -38,18 +45,40 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
-        mFragments = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            if (i == 0) {
-                mFragments.add(new BookShelfFragment());
-            } else {
-                mFragments.add(new SelfFragment());
-            }
+
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
         }
+
+        mFragments = new ArrayList<>();
+        mFragments.add(new BookShelfFragment());
+        mFragments.add(new BookStoreFragment());
+        mFragments.add(new SelfFragment());
 
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOffscreenPageLimit(2);
+        mTitle.setText(mAdapter.getPageTitle(0));
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mTitle.setText(mAdapter.getPageTitle(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 

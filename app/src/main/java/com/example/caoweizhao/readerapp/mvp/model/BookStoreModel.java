@@ -3,8 +3,8 @@ package com.example.caoweizhao.readerapp.mvp.model;
 import android.util.Log;
 
 import com.example.caoweizhao.readerapp.bean.Book;
-import com.example.caoweizhao.readerapp.mvp.model.API.BookShelfService;
-import com.example.caoweizhao.readerapp.mvp.presenter.IBookShelfPresenter;
+import com.example.caoweizhao.readerapp.mvp.model.API.BookStoreService;
+import com.example.caoweizhao.readerapp.mvp.presenter.IBookStorePresenter;
 import com.example.caoweizhao.readerapp.util.RetrofitUtil;
 
 import java.util.List;
@@ -18,19 +18,19 @@ import io.reactivex.schedulers.Schedulers;
  * Created by caoweizhao on 2017-9-22.
  */
 
-public class BookShelfModel extends BaseModel<IBookShelfPresenter> implements IBookShelfModel {
+public class BookStoreModel extends BaseModel<IBookStorePresenter> implements IBookStoreModel {
 
-    private BookShelfService mService;
+    private BookStoreService mService;
 
-    public BookShelfModel(IBookShelfPresenter presenter) {
+    public BookStoreModel(IBookStorePresenter presenter) {
         super(presenter);
         mService = RetrofitUtil.getRetrofit()
-                .create(BookShelfService.class);
+                .create(BookStoreService.class);
     }
 
     @Override
-    public void getBookShelf() {
-        Log.d("BookShelfModel","getBookShelf");
+    public void getBookStore() {
+        Log.d("BookStoreModel","getBookStore");
         mService.getBooks()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -42,7 +42,7 @@ public class BookShelfModel extends BaseModel<IBookShelfPresenter> implements IB
 
                     @Override
                     public void onNext(List<Book> value) {
-                        mPresenter.onBookShelfFetched(value);
+                        mPresenter.onBookStoreFetched(value);
                     }
 
                     @Override

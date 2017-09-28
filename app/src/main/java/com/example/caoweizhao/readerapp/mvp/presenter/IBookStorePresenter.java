@@ -1,7 +1,7 @@
 package com.example.caoweizhao.readerapp.mvp.presenter;
 
 import com.example.caoweizhao.readerapp.bean.Book;
-import com.example.caoweizhao.readerapp.mvp.view.IBookShelfView;
+import com.example.caoweizhao.readerapp.mvp.view.IBookStoreView;
 
 import java.util.List;
 
@@ -9,11 +9,11 @@ import java.util.List;
  * Created by caoweizhao on 2017-9-22.
  */
 
-public interface IBookShelfPresenter extends IPresenter<IBookShelfView> {
+public interface IBookStorePresenter extends IPresenter<IBookStoreView> {
 
-    void getBookShelf();
+    void getBookStore();
 
-    void onBookShelfFetched(List<Book> resultList);
+    void onBookStoreFetched(List<Book> resultList);
 
     void onErrorHappened(String errorMsg);
 

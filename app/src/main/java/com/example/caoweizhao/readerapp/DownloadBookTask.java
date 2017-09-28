@@ -73,7 +73,8 @@ public class DownloadBookTask {
     }
 
     public void download() {
-        long count = (mTargetSize % mPerDownloadSize) == 0 ? mTargetSize / mPerDownloadSize : (mTargetSize / mPerDownloadSize + 1);
+        long count = (mTargetSize % mPerDownloadSize) == 0 ?
+                mTargetSize / mPerDownloadSize : (mTargetSize / mPerDownloadSize + 1);
         for (int i = 0; i < count - 1; i++) {
             long begin = mPerDownloadSize * i;
             long end = begin + mPerDownloadSize - 1;
@@ -88,7 +89,6 @@ public class DownloadBookTask {
 
         DownloadRunnable downloadRunnable = new DownloadRunnable(observable, mFileName, begin, mTargetSize);
         SERIAL_EXECUTOR.execute(downloadRunnable);
-
 
         if (mBookSizeObservable != null) {
 

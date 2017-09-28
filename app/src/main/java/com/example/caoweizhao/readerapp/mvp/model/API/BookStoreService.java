@@ -12,7 +12,7 @@ import retrofit2.http.Path;
  * Created by caoweizhao on 2017-9-22.
  */
 
-public interface BookShelfService {
+public interface BookStoreService {
 
     @GET("book/images/{path}")
     void getImage(@Path("path") String path);

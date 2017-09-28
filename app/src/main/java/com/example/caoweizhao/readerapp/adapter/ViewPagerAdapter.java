@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +14,12 @@ import java.util.List;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     List<Fragment> mFragments;
+    private List<String> mTitles = new ArrayList<>();
+    {
+        mTitles.add("书架");
+        mTitles.add("书城");
+        mTitles.add("我的");
+    }
 
     public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
         super(fm);
@@ -27,5 +34,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return mFragments.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return mTitles.get(position);
     }
 }

@@ -19,16 +19,16 @@ import java.util.List;
  * Created by caoweizhao on 2017-9-22.
  */
 
-public class BookShelfAdapter extends BaseQuickAdapter<Book, BaseViewHolder> {
+public class BookStoreAdapter extends BaseQuickAdapter<Book, BaseViewHolder> {
 
     Fragment mFragment;
 
-    public BookShelfAdapter(Context context, @Nullable List<Book> data) {
-        super(R.layout.book_shelf_item, data);
+    public BookStoreAdapter(Context context, @Nullable List<Book> data) {
+        super(R.layout.book_store_item, data);
     }
 
-    public BookShelfAdapter(Fragment fragment, @Nullable List<Book> data) {
-        super(R.layout.book_shelf_item, data);
+    public BookStoreAdapter(Fragment fragment, @Nullable List<Book> data) {
+        super(R.layout.book_store_item, data);
         mFragment = fragment;
     }
 
@@ -36,9 +36,9 @@ public class BookShelfAdapter extends BaseQuickAdapter<Book, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, Book item) {
         helper.setText(R.id.item_book_name, item.getName());
         ImageView imageView = (ImageView) helper.itemView.findViewById(R.id.item_book_img);
-        Log.d("BookShelfAdapter",item.getImg_url());
+        Log.d("BookStoreAdapter",item.getImg_url());
         String url = Constant.BASE_URL + "book/images/" + item.getImg_url();
-        Log.d("BookShelfAdapter",url);
+        Log.d("BookStoreAdapter",url);
         Glide.with(mFragment)
                 .load(url)
                 .into(imageView);

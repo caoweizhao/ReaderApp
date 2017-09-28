@@ -4,7 +4,7 @@ package com.example.caoweizhao.readerapp.mvp.model;
  * Created by caoweizhao on 2017-9-22.
  */
 
-public interface IBookShelfModel extends StopableModel {
+public interface IBookStoreModel extends StopableModel {
 
-    void getBookShelf();
+    void getBookStore();
 }

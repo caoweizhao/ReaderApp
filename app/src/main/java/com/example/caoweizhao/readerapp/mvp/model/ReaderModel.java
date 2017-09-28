@@ -83,8 +83,6 @@ public class ReaderModel extends BaseModel<IReaderPresenter> implements IReaderM
                         mDownLoadTask = new DownloadBookTask(url, mFileLength);
                         mDownLoadTask.download();
                     }
-
-
                 } else {
                     mService.getBook(url)
                             .observeOn(AndroidSchedulers.mainThread())
