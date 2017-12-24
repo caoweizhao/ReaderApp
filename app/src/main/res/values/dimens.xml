@@ -4,4 +4,5 @@
     <dimen name="self_page_text_padding_left">20dp</dimen>
     <dimen name="self_page_text_size">16sp</dimen>
     <dimen name="book_shelf_title_text_size">18sp</dimen>
+    <dimen name="text_padding">8dp</dimen>
 </resources>

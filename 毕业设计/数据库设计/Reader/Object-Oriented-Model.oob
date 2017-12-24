@@ -2137,7 +2137,7 @@ DAT 1505963541</a:History>
 <c:Attributes>
 <o:Attribute Id="o18">
 <a:ObjectID>E8C632B3-305E-4067-A522-283794ED165D</a:ObjectID>
-<a:Name>user_name</a:Name>
+<a:Name>userName</a:Name>
 <a:Code>userName</a:Code>
 <a:CreationDate>1505964045</a:CreationDate>
 <a:Creator>caoweizhao</a:Creator>
@@ -2149,7 +2149,7 @@ ORG {BB535684-541D-4B99-984B-DAB91577FD4F}
 DAT 1505963541</a:History>
 <a:DataType>java.lang.String</a:DataType>
 <a:PersistentDataType>TXT</a:PersistentDataType>
-<a:PersistentCode>user_name</a:PersistentCode>
+<a:PersistentCode>userName</a:PersistentCode>
 <a:Multiplicity>1..1</a:Multiplicity>
 </o:Attribute>
 <o:Attribute Id="o19">

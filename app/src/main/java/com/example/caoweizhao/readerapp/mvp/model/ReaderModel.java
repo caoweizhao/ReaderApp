@@ -7,9 +7,10 @@ import android.content.IntentFilter;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.caoweizhao.readerapp.Constant;
 import com.example.caoweizhao.readerapp.DownloadBookTask;
 import com.example.caoweizhao.readerapp.MyApplication;
-import com.example.caoweizhao.readerapp.mvp.model.API.ReaderService;
+import com.example.caoweizhao.readerapp.API.ReaderService;
 import com.example.caoweizhao.readerapp.mvp.presenter.IReaderPresenter;
 import com.example.caoweizhao.readerapp.util.FileHelper;
 import com.example.caoweizhao.readerapp.util.RetrofitUtil;
@@ -80,7 +81,7 @@ public class ReaderModel extends BaseModel<IReaderPresenter> implements IReaderM
                         }
                     } else {
                         Log.d("ReaderModel", "onNext:" + "启动下载");
-                        mDownLoadTask = new DownloadBookTask(url, mFileLength);
+                        mDownLoadTask = new DownloadBookTask(url, mFileLength, Constant.TASKID.getAndIncrement());
                         mDownLoadTask.download();
                     }
                 } else {

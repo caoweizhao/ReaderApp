@@ -53,12 +53,10 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
 
     @Override
     public void showLoading() {
-        Toast.makeText(this, "Show", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void dismissLoading() {
-        Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -72,6 +70,9 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
                     }
                 })
                 .load();
+        if (mLastPage > 0) {
+            Toast.makeText(this, "已恢复上次阅读位置", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

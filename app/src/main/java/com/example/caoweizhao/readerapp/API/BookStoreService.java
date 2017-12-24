@@ -1,4 +1,4 @@
-package com.example.caoweizhao.readerapp.mvp.model.API;
+package com.example.caoweizhao.readerapp.API;
 
 import com.example.caoweizhao.readerapp.bean.Book;
 
@@ -14,9 +14,17 @@ import retrofit2.http.Path;
 
 public interface BookStoreService {
 
+    /**
+     * 获取图片
+     * @param path
+     */
     @GET("book/images/{path}")
     void getImage(@Path("path") String path);
 
+    /**
+     * 获取图书
+     * @return
+     */
     @GET("book/books")
     Observable<List<Book>> getBooks();
 }

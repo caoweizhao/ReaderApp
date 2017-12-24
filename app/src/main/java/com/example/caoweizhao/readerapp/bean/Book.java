@@ -1,13 +1,17 @@
 package com.example.caoweizhao.readerapp.bean;
 
-public class Book {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Book implements Parcelable{
     private Integer id;
     private String name;
-    private String title;
     private String author;
     private String category;
     private String img_url;
     private String url;
+    private String publisher;
+    private String summary;
 
     public String getAuthor() {
         return author;
@@ -57,11 +61,62 @@ public class Book {
         this.name = name;
     }
 
-    public String getTitle() {
-        return title;
+    public String getPublisher() {
+        return publisher;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.author);
+        dest.writeString(this.category);
+        dest.writeString(this.img_url);
+        dest.writeString(this.url);
+        dest.writeString(this.publisher);
+        dest.writeString(this.summary);
+    }
+
+    public Book() {
+    }
+
+    protected Book(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.name = in.readString();
+        this.author = in.readString();
+        this.category = in.readString();
+        this.img_url = in.readString();
+        this.url = in.readString();
+        this.publisher = in.readString();
+        this.summary = in.readString();
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel source) {
+            return new Book(source);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 }

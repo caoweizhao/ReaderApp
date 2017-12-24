@@ -3,6 +3,7 @@ package com.example.caoweizhao.readerapp.mvp.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,6 +30,8 @@ public class BookStoreFragment extends BaseFragment implements IBookStoreView {
 
     @BindView(R.id.book_shelf_recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.book_store_swiprefreshlayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     BookStoreAdapter mAdapter;
     List<Book> mBooks = new ArrayList<>();
@@ -49,23 +52,31 @@ public class BookStoreFragment extends BaseFragment implements IBookStoreView {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Book book = mAdapter.getItem(position);
-                Intent intent = new Intent(getContext(), ReaderActivity.class);
-                intent.putExtra("data", book.getUrl());
+                Intent intent = new Intent(getContext(), BookDetailActivity.class);
+                intent.putExtra("data", book);
                 startActivity(intent);
             }
         });
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.getBookStore();
+            }
+        });
+
         mPresenter = new BookStorePresenter(this);
         mPresenter.getBookStore();
     }
 
     @Override
     public void showLoading() {
-        Toast.makeText(getActivity(), "Loading..", Toast.LENGTH_SHORT).show();
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void dismissLoading() {
-        Toast.makeText(getActivity(), "Dismiss Loading...", Toast.LENGTH_SHORT).show();
+       mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

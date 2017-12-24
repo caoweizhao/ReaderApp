@@ -3,7 +3,7 @@ package com.example.caoweizhao.readerapp.mvp.model;
 import android.util.Log;
 
 import com.example.caoweizhao.readerapp.bean.Book;
-import com.example.caoweizhao.readerapp.mvp.model.API.BookStoreService;
+import com.example.caoweizhao.readerapp.API.BookStoreService;
 import com.example.caoweizhao.readerapp.mvp.presenter.IBookStorePresenter;
 import com.example.caoweizhao.readerapp.util.RetrofitUtil;
 

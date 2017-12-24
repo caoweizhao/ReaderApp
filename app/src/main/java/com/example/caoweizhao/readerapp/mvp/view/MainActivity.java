@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.caoweizhao.readerapp.R;
 import com.example.caoweizhao.readerapp.adapter.ViewPagerAdapter;
 import com.example.caoweizhao.readerapp.base.BaseActivity;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -53,6 +54,8 @@ public class MainActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
         }
+
+        SystemBarTintManager manager = new SystemBarTintManager(this);
 
         mFragments = new ArrayList<>();
         mFragments.add(new BookShelfFragment());
