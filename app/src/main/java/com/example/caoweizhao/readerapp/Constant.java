@@ -10,4 +10,8 @@ public class Constant {
 
     public static AtomicInteger TASKID = new AtomicInteger();
     public static final String BASE_URL = "http://192.168.191.1:8080/";
+
+    public static final String ACTION_UPDTATE = "UPDATE";
+    public static final String ACTION_DONE = "DONE";
+
 }

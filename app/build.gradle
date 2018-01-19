@@ -47,6 +47,7 @@ dependencies {
     compile 'com.github.barteksc:android-pdf-viewer:2.7.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+    compile 'org.litepal.android:core:1.6.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }
 configurations.all {

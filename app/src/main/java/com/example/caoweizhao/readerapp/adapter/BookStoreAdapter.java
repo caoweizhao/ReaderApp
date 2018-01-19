@@ -36,7 +36,6 @@ public class BookStoreAdapter extends BaseQuickAdapter<Book, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, Book item) {
         helper.setText(R.id.item_book_name, item.getName());
         ImageView imageView = (ImageView) helper.itemView.findViewById(R.id.item_book_img);
-        Log.d("BookStoreAdapter",item.getImg_url());
         String url = Constant.BASE_URL + "book/images/" + item.getImg_url();
         Log.d("BookStoreAdapter",url);
         Glide.with(mFragment)

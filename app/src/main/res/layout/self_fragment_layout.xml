@@ -2,9 +2,11 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+
     android:scrollbars="none">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -71,7 +73,8 @@
                 />
 
             <include layout="@layout/divider_view"/>
-f
+            f
+
             <TextView
                 android:id="@+id/theme_setting"
                 android:layout_width="match_parent"
@@ -84,6 +87,7 @@ f
                 />
 
             <include layout="@layout/divider_view"/>
+
             <TextView
                 android:id="@+id/download_management"
                 android:layout_width="match_parent"
@@ -94,6 +98,7 @@ f
                 android:text="下载管理"
                 android:textSize="@dimen/self_page_text_size"
                 />
+
             <include layout="@layout/divider_view"/>
 
             <TextView
@@ -108,15 +113,32 @@ f
 
             <include layout="@layout/divider_view"/>
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/clear_cache"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/self_page_text_padding_vertical"
-                android:paddingLeft="@dimen/self_page_text_padding_left"
-                android:paddingTop="@dimen/self_page_text_padding_vertical"
-                android:text="清除缓存"
-                android:textSize="@dimen/self_page_text_size"
-                />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:paddingBottom="@dimen/self_page_text_padding_vertical"
+                    android:paddingLeft="@dimen/self_page_text_padding_left"
+                    android:paddingTop="@dimen/self_page_text_padding_vertical"
+                    android:text="清除缓存"
+                    android:textSize="@dimen/self_page_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/cache_size_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/self_page_text_padding_vertical"
+                    android:paddingTop="@dimen/self_page_text_padding_vertical"
+                    tools:text="1.9M"
+                    />
+            </LinearLayout>
 
             <include layout="@layout/divider_view"/>
 

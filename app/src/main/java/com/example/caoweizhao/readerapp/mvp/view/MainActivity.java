@@ -1,10 +1,13 @@
 package com.example.caoweizhao.readerapp.mvp.view;
 
+import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.caoweizhao.readerapp.R;
@@ -110,5 +113,33 @@ public class MainActivity extends BaseActivity {
                 mViewPager.setCurrentItem(mBottomBar.findPositionForTabWithId(tabId));
             }
         });
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d("MainActivity", "onCreate");
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStop() {
+        /*Log.d("MainActivity","onStop");
+        final ServiceConnection mConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                DownloadService.DownloadBinder mBinder = (DownloadService.DownloadBinder) service;
+                mBinder.pauseAll();
+                unbindService(this);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        Intent intent = new Intent(this, DownloadService.class);
+        bindService(intent, mConnection, BIND_AUTO_CREATE);
+        super.onStop();*/
+        super.onStop();
     }
 }

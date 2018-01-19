@@ -1,171 +1,309 @@
 package com.example.caoweizhao.readerapp;
 
-import android.support.annotation.NonNull;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.caoweizhao.readerapp.API.ReaderService;
-import com.example.caoweizhao.readerapp.util.RetrofitUtil;
+import com.example.caoweizhao.readerapp.util.FileHelper;
 
-import java.util.ArrayDeque;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.litepal.annotation.Column;
+import org.litepal.crud.DataSupport;
 
-import io.reactivex.Observable;
-import okhttp3.ResponseBody;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by caoweizhao on 2017-9-25.
  */
 
-public class DownloadBookTask {
+public class DownloadBookTask extends DataSupport {
+    /**
+     * 暂停下载状态
+     */
+    public static final int STATE_PAUSE = 1;
+    /**
+     * 下载中状态
+     */
+    public static final int STATE_DOWNLOADING = 0;
+    /**
+     * 下载完成状态
+     */
+    public static final int STATE_COMPLETE = 2;
 
     /**
      * 文件url
      */
+    @Column(unique = true, nullable = false)
     private String mUrl;
     /**
      * 目标文件大小
      */
+    @Column
     private long mTargetSize;
-
-    private ReaderService mService;
     /**
      * 文件名
      */
+    @Column
     private String mFileName;
+    /**
+     * 开启线程数量
+     */
+    @Column
+    private int THREAD_COUNT = 3;
+    /**
+     * 下载百分比
+     */
+    @Column
+    private double mPercent;
+    /**
+     * 下载状态
+     */
+    @Column
+    private int mDownloadState;
 
-    private static final Executor THREAD_POOL_EXECUTOR;
-    private SerialExecutor SERIAL_EXECUTOR;
-    private static final ThreadFactory sThreadFactory = new ThreadFactory() {
-        private final AtomicInteger mCount = new AtomicInteger(1);
-
-        public Thread newThread(@NonNull Runnable r) {
-            return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
-        }
-    };
-    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
-    private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
-    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
-    private static final int KEEP_ALIVE_SECONDS = 30;
-    private static final BlockingQueue<Runnable> sPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(128);
-
-    private int mTaskId;
-
-    static {
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
-                CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,
-                sPoolWorkQueue, sThreadFactory);
-        threadPoolExecutor.allowCoreThreadTimeOut(true);
-        THREAD_POOL_EXECUTOR = threadPoolExecutor;
+    public String getFileName() {
+        return mFileName;
     }
+
+    public void setFileName(String fileName) {
+        this.mFileName = fileName;
+    }
+
+    public double getPercent() {
+        return mPercent;
+    }
+
+    public void setPercent(double percent) {
+        this.mPercent = percent;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public void setUrl(String url) {
+        this.mUrl = url;
+    }
+
+    public int getDownloadState() {
+        return mDownloadState;
+    }
+
+    public void setDownloadState(int downloadState) {
+        this.mDownloadState = downloadState;
+    }
+
+    private DownloadListener mListener = new DownloadListener();
 
     /**
-     * 每个线程下载大小
+     * 记录已下载量
      */
-    private long mPerDownloadSize = 50 * 1024 * 1024;
+    private volatile long mDownloadedLength = 0;
 
-    {
-        mService = RetrofitUtil.getRetrofit()
-                .create(ReaderService.class);
+    /**
+     * 线程池
+     */
+    private ExecutorService mThreadPool = Executors.newFixedThreadPool(3);
+    /**
+     * 下载任务Id
+     */
+    private int mTaskId;
+
+    public void setTaskId(int taskId) {
+        mTaskId = taskId;
     }
+
+    public int getTaskId() {
+        return mTaskId;
+    }
+
+    //java并发，等待下载线程完成暂停后，将进度保存
+    private CyclicBarrier mBarrier = new CyclicBarrier(THREAD_COUNT, new Runnable() {
+        @Override
+        public void run() {
+            saveProgress();
+        }
+    });
+
+    private void saveProgress() {
+
+        Cursor cursor = null;
+        try {
+            cursor = mDatabase.query("Thread", null, "id=?", new String[]{mUrl + "main"}, null, null, null);
+            ContentValues values = new ContentValues(1);
+            values.put("id", mUrl + "main");
+            values.put("downloadedLength", mDownloadedLength);
+            if (cursor.moveToFirst()) {
+                mDatabase.update("Thread", values, "id=?", new String[]{mUrl + "main"});
+            } else {
+                mDatabase.insert("Thread", null, values);
+            }
+            // Log.d("DownloadBookTask", "percent:" + getPercent() + "DownloadState:" + getDownloadState());
+            DownloadBookTask.this.save();
+           /* List<DownloadBookTask> tasks = DataSupport.findAll(DownloadBookTask.class);
+            for (DownloadBookTask t:tasks
+                 ) {
+                if(t.getUrl().equals(getUrl())){
+                    Log.d("DownloadBookTask",t.getPercent()+"%");
+                    break;
+                }
+            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    private List<DownloadRunnable> mRunnables = new ArrayList<>(3);
+    private DownloadDatabaseHelper mDatabaseHelper;
+    private SQLiteDatabase mDatabase;
 
     public DownloadBookTask(String url, long targetSize, int taskId) {
         mUrl = url;
         mFileName = url;
         mTargetSize = targetSize;
-        SERIAL_EXECUTOR = new SerialExecutor(mFileName);
         mTaskId = taskId;
+        mDatabaseHelper = new DownloadDatabaseHelper(MyApplication.getmContext(), "DownloadThread.db", null, 1);
+        mDatabase = mDatabaseHelper.getWritableDatabase();
     }
 
+    /**
+     * 开始下载
+     */
     public void download() {
-        //所需要的线程数量
-        long count = (mTargetSize % mPerDownloadSize) == 0 ?
-                mTargetSize / mPerDownloadSize : (mTargetSize / mPerDownloadSize + 1);
-        for (int i = 0; i < count - 1; i++) {
-            long begin = mPerDownloadSize * i;
-            long end = begin + mPerDownloadSize - 1;
-            Observable<ResponseBody> observable = mService.getBookSegment(mUrl, "bytes=" + begin + "-" + end);
-            DownloadRunnable downloadRunnable = new DownloadRunnable(mTaskId, observable, mFileName, begin, mTargetSize);
-            SERIAL_EXECUTOR.execute(downloadRunnable);
-        }
-        long begin = mPerDownloadSize * (count - 1);
-        long end = mTargetSize;
-        Observable<ResponseBody> observable = mService.getBookSegment(mUrl, "bytes=" + begin + "-" + end);
+        setDownloadState(DownloadBookTask.STATE_DOWNLOADING);
+        long begin = 0;
+        long end = 0;
+        long perTaskSize = mTargetSize / THREAD_COUNT;
+        Log.d("DownloadBookTask", "per" + perTaskSize);
+        //读取总下载进度
+        Cursor cursor = null;
+        try {
+            cursor = mDatabase.query("Thread", null, "id=?", new String[]{mUrl + "main"}, null, null, null);
+            if (cursor.moveToFirst()) {
+                mDownloadedLength = cursor.getLong(cursor.getColumnIndex("downloadedLength"));
+                Log.d("DownloadRunnable", mDownloadedLength + "downloadedLen");
+            }
 
-        DownloadRunnable downloadRunnable = new DownloadRunnable(mTaskId, observable, mFileName, begin, mTargetSize);
-        SERIAL_EXECUTOR.execute(downloadRunnable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        Log.d("DownloadBookTask", mTargetSize + ":" + mDownloadedLength);
+        if (mTargetSize - mDownloadedLength <= 2) {
+            Log.d("DownloadBookTask", "已下载完");
+            return;
+        }
+
+        mRunnables.clear();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            if (i != THREAD_COUNT - 1) {
+                begin = perTaskSize * i;
+                end = begin + perTaskSize - 1;
+            } else {
+                begin = perTaskSize * i;
+                end = mTargetSize;
+            }
+            Log.d("DownloadBookTask", "downloadaa:" + mUrl);
+            DownloadRunnable downloadRunnable = new DownloadRunnable(mTaskId, mUrl, mUrl + i, begin, end, mTargetSize, mListener);
+            mRunnables.add(downloadRunnable);
+            mThreadPool.execute(downloadRunnable);
+        }
     }
 
+    /**
+     * 暂停下载,保存已下载总进度
+     */
+    public void pause() {
+        setDownloadState(DownloadBookTask.STATE_PAUSE);
+        for (DownloadRunnable r : mRunnables
+                ) {
+            r.pause(mBarrier);
+        }
+    }
+
+    /**
+     * 恢复下载
+     */
+    public void resume() {
+        download();
+    }
+
+    /**
+     * 取消下载
+     */
     public void cancel() {
-        SERIAL_EXECUTOR.cancel();
-    }
-
-    private static class SerialExecutor implements Executor {
-        final ArrayDeque<Runnable> mTasks = new ArrayDeque<Runnable>();
-        Runnable mActive;
-        boolean errorHappen = false;
-        String mFileName;
-
-        public SerialExecutor(String fileName) {
-            mFileName = fileName;
-        }
-
-        public synchronized void execute(final Runnable r) {
-            if (errorHappen) {
-                Log.d("SerialExecutor","error happen");
-                return;
-            }
-            mTasks.offer(new MR(r));
-            if (mActive == null) {
-                scheduleNext();
-            }
-        }
-
-        protected synchronized void scheduleNext() {
-            if ((mActive = mTasks.poll()) != null) {
-                THREAD_POOL_EXECUTOR.execute(mActive);
-            }
-
-        }
-        public synchronized void pause(){
-            if (mActive != null) {
-                ((DownloadRunnable) (((MR) mActive).mR)).cancel();
-            }
-        }
-
-        public synchronized void cancel() {
-            if (mActive != null) {
-                ((DownloadRunnable) (((MR) mActive).mR)).cancel();
-            }
-            mTasks.clear();
-        }
-
-        class MR implements Runnable {
-
-            Runnable mR;
-
-            public MR(Runnable r) {
-                mR = r;
-            }
-
+        pause();
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
+                File file = FileHelper.getBooksDir();
+                File bookFile = new File(file, mUrl);
+                bookFile.delete();
+                Log.d("DownloadBookTask", bookFile.getAbsolutePath());
+                mDownloadedLength = 0;
                 try {
-                    mR.run();
-                    Log.d("MR","schedule next");
-                    scheduleNext();
+                    Log.d("DownloadBookTask", "Target:" + mUrl);
+                    int deleteCount = mDatabase.delete("Thread", "id like ?", new String[]{mUrl + "%"});
+                    Log.d("DownloadBookTask", "cancel" + deleteCount);
                 } catch (Exception e) {
-                    Log.d("SerialExecutor", "error");
-                    errorHappen = true;
                     e.printStackTrace();
                 }
             }
+        }, 1000);
+    }
+
+    /**
+     * 更新进度
+     *
+     * @param downloadedLength 提交的下载量
+     */
+    public synchronized void publishProgress(long downloadedLength) {
+        mDownloadedLength += downloadedLength;
+        double percent = (((double) mDownloadedLength / (double) mTargetSize) * 100);
+        Intent i = new Intent(MyApplication.getmContext(), DownloadService.class);
+        i.setAction(Constant.ACTION_UPDTATE);
+        i.putExtra("url", mUrl);
+        i.putExtra("percent", percent);
+        Log.d("DownloadBookTask", "publishProgress:" + mDownloadedLength + "---" + percent + "%" + "--" + Thread.currentThread().getName());
+        if (mTargetSize - mDownloadedLength <= 2) {
+            i.putExtra("percent", (double) 100);
+            mDownloadedLength = mTargetSize;
+            setPercent(100);
+            setDownloadState(DownloadBookTask.STATE_COMPLETE);
+            saveProgress();
+        }
+        MyApplication.getmContext().startService(i);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof DownloadBookTask)) {
+            return false;
+        }
+        DownloadBookTask task = (DownloadBookTask) obj;
+
+        return task.getUrl().equals(getUrl());
+    }
+
+    public class DownloadListener {
+        void publishDownloadedLength(long downloadedLength) {
+            publishProgress(downloadedLength);
         }
     }
 }

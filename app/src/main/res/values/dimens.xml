@@ -5,4 +5,7 @@
     <dimen name="self_page_text_size">16sp</dimen>
     <dimen name="book_shelf_title_text_size">18sp</dimen>
     <dimen name="text_padding">8dp</dimen>
+    <dimen name="book_shelf_item_text_padding">4dp</dimen>
+
+    <dimen name="recent_reading_item_text_padding">5dp</dimen>
 </resources>

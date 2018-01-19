@@ -3,15 +3,28 @@ package com.example.caoweizhao.readerapp.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Book implements Parcelable{
+import org.litepal.annotation.Column;
+import org.litepal.crud.DataSupport;
+
+public class Book extends DataSupport implements Parcelable{
+    @Column
     private Integer id;
+    @Column
     private String name;
+    @Column
     private String author;
+    @Column
     private String category;
+    @Column
     private String img_url;
+    @Column
     private String url;
+    @Column
     private String publisher;
+    @Column
     private String summary;
+    @Column
+    private RecentReadBook mRecentReadBook;
 
     public String getAuthor() {
         return author;
@@ -119,4 +132,12 @@ public class Book implements Parcelable{
             return new Book[size];
         }
     };
+
+    public RecentReadBook getRecentReadBook() {
+        return mRecentReadBook;
+    }
+
+    public void setRecentReadBook(RecentReadBook recentReadBook) {
+        mRecentReadBook = recentReadBook;
+    }
 }

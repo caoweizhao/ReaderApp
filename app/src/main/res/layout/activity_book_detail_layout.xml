@@ -101,6 +101,7 @@
                 android:padding="8dp"
                 android:text="2143asdfasd fasdf asdfasdfffffffffffffffffffasddddddddddddddddddddddddd"
                 android:textSize="18sp"
+                android:onClick="share"
                 />
 
         </LinearLayout>

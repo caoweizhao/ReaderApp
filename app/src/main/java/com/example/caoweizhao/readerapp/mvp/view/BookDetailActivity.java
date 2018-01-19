@@ -1,11 +1,15 @@
 package com.example.caoweizhao.readerapp.mvp.view;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,24 +19,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.caoweizhao.readerapp.API.ReaderService;
 import com.example.caoweizhao.readerapp.Constant;
-import com.example.caoweizhao.readerapp.DownloadBookTask;
+import com.example.caoweizhao.readerapp.DownloadService;
 import com.example.caoweizhao.readerapp.R;
 import com.example.caoweizhao.readerapp.base.BaseActivity;
 import com.example.caoweizhao.readerapp.bean.Book;
 import com.example.caoweizhao.readerapp.bean.Collection;
 import com.example.caoweizhao.readerapp.bean.User;
-import com.example.caoweizhao.readerapp.API.ReaderService;
+import com.example.caoweizhao.readerapp.util.FileHelper;
 import com.example.caoweizhao.readerapp.util.RetrofitUtil;
+
+import java.io.File;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Response;
 
 /**
  * Created by caoweizhao on 2017-9-28.
@@ -57,7 +62,6 @@ public class BookDetailActivity extends BaseActivity {
 
     Book mBook;
     ReaderService mService;
-
     MenuItem mCollectItem;
 
     @Override
@@ -83,8 +87,6 @@ public class BookDetailActivity extends BaseActivity {
 
         mService = RetrofitUtil.getRetrofit()
                 .create(ReaderService.class);
-
-
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -112,10 +114,10 @@ public class BookDetailActivity extends BaseActivity {
                     @Override
                     public void onNext(Boolean value) {
                         //已收藏
-                        if(value!=null && value.booleanValue() == true){
+                        if (value != null && value.booleanValue() == true) {
                             mCollectItem.setChecked(true);
                             mCollectItem.setIcon(R.drawable.ic_collected);
-                        }else{
+                        } else {
                             //未收藏
                             mCollectItem.setChecked(false);
                             mCollectItem.setIcon(R.drawable.ic_not_collected);
@@ -148,6 +150,7 @@ public class BookDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(BookDetailActivity.this, ReaderActivity.class);
                 intent.putExtra("data", mBook.getUrl());
+                intent.putExtra("book", mBook);
                 startActivity(intent);
             }
         });
@@ -165,6 +168,17 @@ public class BookDetailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.download:
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    ActivityCompat.requestPermissions(this, new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"}, 0);
+                    return true;
+                }
                 download();
                 break;
             case R.id.collection:
@@ -188,7 +202,7 @@ public class BookDetailActivity extends BaseActivity {
         }*/
         Collection collection = new Collection();
         collection.setId(mBook.getId());
-       // collection.setUserName(user.getUserName());
+        // collection.setUserName(user.getUserName());
         collection.setUserName("caoweizhao");
         mService.collectBook(collection)
                 .subscribeOn(Schedulers.newThread())
@@ -262,7 +276,7 @@ public class BookDetailActivity extends BaseActivity {
      * 下载书籍
      */
     private void download() {
-        mService.getBookSize(mBook.getUrl())
+        /*mService.getBookSize(mBook.getUrl())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .map(new Function<Response<String>, Long>() {
@@ -279,8 +293,8 @@ public class BookDetailActivity extends BaseActivity {
             public void onNext(Long value) {
                 //启动下载
                 Log.d("BookDetailActivity", "onNext:" + value);
-                DownloadBookTask downloadBookTask = new DownloadBookTask(mBook.getUrl(), value, Constant.TASKID.getAndIncrement());
-                downloadBookTask.download();
+                mDownloadBookTask = new DownloadBookTask(mBook.getUrl(), value, Constant.TASKID.getAndIncrement());
+                mDownloadBookTask.download();
             }
 
             @Override
@@ -292,7 +306,28 @@ public class BookDetailActivity extends BaseActivity {
             public void onComplete() {
 
             }
-        });
-
+        });*/
+        Intent intent = new Intent(BookDetailActivity.this, DownloadService.class);
+        intent.putExtra("book", mBook);
+        startService(intent);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                download();
+            }
+        }
+    }
+
+    public void share(View view) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setType("application/pdf");
+        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(FileHelper.getBooksDir(), mBook.getUrl())));
+        startActivity(Intent.createChooser(sendIntent,"Share To..."));
+    }
+
 }

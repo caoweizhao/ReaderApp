@@ -29,6 +29,14 @@
         </activity>
         <activity android:name=".activity.CollectionActivity">
         </activity>
+        <activity android:name=".activity.DownloadActivity"/>
+        <activity android:name=".activity.RecentReadActivity"/>
+
+        <service
+            android:name=".DownloadService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>
