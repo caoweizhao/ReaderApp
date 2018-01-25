@@ -12,11 +12,13 @@ import android.widget.Toast;
 import com.example.caoweizhao.readerapp.API.ReaderService;
 import com.example.caoweizhao.readerapp.activity.DownloadActivity;
 import com.example.caoweizhao.readerapp.bean.Book;
+import com.example.caoweizhao.readerapp.util.FileHelper;
 import com.example.caoweizhao.readerapp.util.NotificationUtil;
 import com.example.caoweizhao.readerapp.util.RetrofitUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +88,10 @@ public class DownloadService extends Service {
                                     .setAutoCancel(true)
                                     .build();
                             NotificationUtil.getInstance(this).showNotification(task.getTaskId(), notification);
+                            File tempFile = new File(FileHelper.getBooksDir(), "temp" + task.getUrl());
+                            if (tempFile.exists()) {
+                                tempFile.delete();
+                            }
                         }
                         break;
                     }

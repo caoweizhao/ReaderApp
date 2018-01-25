@@ -10,15 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextColor="?android:attr/textColorSecondary"
         >
 
         <TextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="18sp"
             />
 

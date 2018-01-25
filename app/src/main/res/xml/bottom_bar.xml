@@ -7,7 +7,7 @@
     <tab
         icon="@drawable/ic_book"
         id="@+id/tab_book_page"
-        title="@string/book_page"/>5[
+        title="@string/book_page"/>
     <tab
         icon="@drawable/ic_myself"
         id="@+id/tab_myself"

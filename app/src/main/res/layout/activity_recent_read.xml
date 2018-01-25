@@ -2,18 +2,16 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.caoweizhao.readerapp.activity.CollectionActivity">
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextColor="?android:attr/textColorSecondary"
         >
 
         <TextView
@@ -23,6 +21,7 @@
             android:gravity="center_horizontal"
             android:text="最近阅读"
             android:textSize="18sp"
+            android:textColor="?android:attr/textColorSecondary"
             />
 
     </android.support.v7.widget.Toolbar>
@@ -36,7 +35,7 @@
             android:id="@+id/recent_reading_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#bcabab"
+            android:background="?android:attr/colorBackground"
             android:clipToPadding="false"
             android:paddingBottom="8dp"
             >

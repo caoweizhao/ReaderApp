@@ -5,4 +5,15 @@
     <string name="book_page">书城</string>
     <string name="myself_page">我的</string>
 
+    <string-array name="theme_items">
+        <item>普通模式</item>
+        <item>夜间模式</item>
+        <item>自动</item>
+    </string-array>
+    <string-array name="note_book_sort_type">
+        <item>按页码</item>
+        <item>按时间</item>
+    </string-array>
+
+
 </resources>

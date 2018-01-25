@@ -117,13 +117,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("MainActivity", "onCreate");
+        Log.d("OCRActivity", "onCreate");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onStop() {
-        /*Log.d("MainActivity","onStop");
+        /*Log.d("OCRActivity","onStop");
         final ServiceConnection mConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {

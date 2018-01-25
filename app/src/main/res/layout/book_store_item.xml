@@ -31,5 +31,6 @@
         android:text="这个是书名"
         android:textSize="@dimen/book_shelf_title_text_size"
         android:textStyle="bold"
+        android:textColor="?android:attr/textColorSecondary"
         />
 </LinearLayout>

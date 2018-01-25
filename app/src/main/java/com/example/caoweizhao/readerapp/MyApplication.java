@@ -2,8 +2,10 @@ package com.example.caoweizhao.readerapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.example.caoweizhao.readerapp.bean.User;
+import com.example.caoweizhao.readerapp.util.SharePreferenceMgr;
 
 import org.litepal.LitePal;
 
@@ -17,8 +19,15 @@ public class MyApplication extends Application {
 
     public static boolean DEBUG = true;
 
-    public MyApplication(){
+    public MyApplication() {
         LitePal.initialize(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        int mode = SharePreferenceMgr.getTheme(this);
+        setThemeMode(mode);
     }
 
     public static Context getmContext() {
@@ -27,11 +36,11 @@ public class MyApplication extends Application {
 
     public static User mUser;
 
-    public static void setUser(User user){
+    public static void setUser(User user) {
         mUser = user;
     }
 
-    public static User getUser(){
+    public static User getUser() {
 
         User user = new User();
         user.setUser_name("caoweizhao");
@@ -46,5 +55,10 @@ public class MyApplication extends Application {
             return mUser;
         }
         return null;*/
+    }
+
+    public void setThemeMode(@SharePreferenceMgr.ThemeType int mode) {
+        AppCompatDelegate.setDefaultNightMode(mode);
+        SharePreferenceMgr.putTheme(this, mode);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.caoweizhao.readerapp.activity;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import com.example.caoweizhao.readerapp.R;
 import com.example.caoweizhao.readerapp.adapter.RecentReadAdapter;
 import com.example.caoweizhao.readerapp.base.BaseActivity;
 import com.example.caoweizhao.readerapp.bean.RecentReadBook;
+import com.example.caoweizhao.readerapp.mvp.view.ReaderActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -58,7 +60,7 @@ public class RecentReadActivity extends BaseActivity {
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecentReadBooks = new ArrayList<>();
-        mAdapter = new RecentReadAdapter(this,mRecentReadBooks);
+        mAdapter = new RecentReadAdapter(this, mRecentReadBooks);
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_view);
     }
@@ -76,15 +78,16 @@ public class RecentReadActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 RecentReadBook recentReadBook = mRecentReadBooks.get(position);
-                /*Intent intent = new Intent(CollectionActivity.this, BookDetailActivity.class);
-                intent.putExtra("data",book);
-                startActivity(intent);*/
+                Intent intent = new Intent(RecentReadActivity.this, ReaderActivity.class);
+                intent.putExtra("book", recentReadBook.getBook());
+                intent.putExtra("data", recentReadBook.getUrl());
+                startActivity(intent);
             }
         });
     }
 
     public void getRecentReadBooks() {
-        List<RecentReadBook> recentReadBooks = DataSupport.order("time desc").find(RecentReadBook.class,true);
+        List<RecentReadBook> recentReadBooks = DataSupport.order("time desc").find(RecentReadBook.class, true);
         if (recentReadBooks.size() > 0) {
             mRecentReadBooks = recentReadBooks;
             mAdapter.setNewData(recentReadBooks);

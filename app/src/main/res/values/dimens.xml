@@ -8,4 +8,6 @@
     <dimen name="book_shelf_item_text_padding">4dp</dimen>
 
     <dimen name="recent_reading_item_text_padding">5dp</dimen>
+    <dimen name="note_book_modify_time">12sp</dimen>
+    <dimen name="note_book_text_margin">3dp</dimen>
 </resources>

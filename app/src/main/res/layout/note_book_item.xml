@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/note_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/note_book_text_margin"
+        android:padding="@dimen/note_book_modify_time"
+        android:text="关于Java虚拟机的内存分布"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="16sp"
+        />
+
+    <!--页码-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/note_book_text_margin"
+        android:padding="@dimen/text_padding"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="笔记所在页码："
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/note_book_modify_time"
+            />
+
+        <TextView
+            android:id="@+id/page_belong_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/note_book_modify_time"
+            />
+    </LinearLayout>
+
+    <!--修改时间-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/note_book_text_margin"
+        android:padding="@dimen/text_padding"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="上次修改时间："
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/note_book_modify_time"
+            />
+
+        <TextView
+            android:id="@+id/last_modify_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2018-10-20 19:30"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="@dimen/note_book_modify_time"
+            />
+    </LinearLayout>
+
+    <include layout="@layout/divider_view"/>
+
+</LinearLayout>

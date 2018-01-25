@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-
     android:scrollbars="none">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +15,9 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="0dp"
+            android:minHeight="120dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -49,19 +50,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/my_collection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/self_page_text_padding_vertical"
-                android:paddingLeft="@dimen/self_page_text_padding_left"
-                android:paddingTop="@dimen/self_page_text_padding_vertical"
-                android:text="我的收藏"
-                android:textSize="@dimen/self_page_text_size"
-                />
-
-            <include layout="@layout/divider_view"/>
-
-            <TextView
                 android:id="@+id/recent_reading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,10 +58,10 @@
                 android:paddingTop="@dimen/self_page_text_padding_vertical"
                 android:text="最近阅读"
                 android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
                 />
 
             <include layout="@layout/divider_view"/>
-            f
 
             <TextView
                 android:id="@+id/theme_setting"
@@ -84,6 +72,7 @@
                 android:paddingTop="@dimen/self_page_text_padding_vertical"
                 android:text="主题设置"
                 android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
                 />
 
             <include layout="@layout/divider_view"/>
@@ -97,6 +86,8 @@
                 android:paddingTop="@dimen/self_page_text_padding_vertical"
                 android:text="下载管理"
                 android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
+
                 />
 
             <include layout="@layout/divider_view"/>
@@ -109,6 +100,8 @@
                 android:paddingTop="@dimen/self_page_text_padding_vertical"
                 android:text="本地文件"
                 android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
+
                 />
 
             <include layout="@layout/divider_view"/>
@@ -127,6 +120,8 @@
                     android:paddingTop="@dimen/self_page_text_padding_vertical"
                     android:text="清除缓存"
                     android:textSize="@dimen/self_page_text_size"
+                    android:textColor="?android:attr/textColorPrimary"
+
                     />
 
                 <TextView
@@ -136,7 +131,10 @@
                     android:layout_weight="1"
                     android:paddingBottom="@dimen/self_page_text_padding_vertical"
                     android:paddingTop="@dimen/self_page_text_padding_vertical"
+                    android:gravity="center"
                     tools:text="1.9M"
+                    android:textColor="?android:attr/textColorPrimary"
+
                     />
             </LinearLayout>
 
@@ -148,8 +146,24 @@
                 android:paddingBottom="@dimen/self_page_text_padding_vertical"
                 android:paddingLeft="@dimen/self_page_text_padding_left"
                 android:paddingTop="@dimen/self_page_text_padding_vertical"
+                android:text="功能说明"
+                android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
+
+                />
+
+            <include layout="@layout/divider_view"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/self_page_text_padding_vertical"
+                android:paddingLeft="@dimen/self_page_text_padding_left"
+                android:paddingTop="@dimen/self_page_text_padding_vertical"
                 android:text="关于Reader"
                 android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
+
                 />
 
             <include layout="@layout/divider_view"/>
@@ -162,6 +176,8 @@
                 android:paddingTop="@dimen/self_page_text_padding_vertical"
                 android:text="意见反馈"
                 android:textSize="@dimen/self_page_text_size"
+                android:textColor="?android:attr/textColorPrimary"
+
                 />
 
             <include layout="@layout/divider_view"/>

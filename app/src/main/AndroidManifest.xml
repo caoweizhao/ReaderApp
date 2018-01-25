@@ -7,6 +7,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+    <!--ORC-->
+    <!--应用联网，发送请求数据至服务器，获得识别结果。-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--调用相机进行拍照（仅UI部分需要）-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!--图片裁剪临时存储-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -27,10 +36,14 @@
         <activity android:name=".mvp.view.BookDetailActivity"/>
         <activity android:name=".activity.LoginActivity">
         </activity>
-        <activity android:name=".activity.CollectionActivity">
-        </activity>
         <activity android:name=".activity.DownloadActivity"/>
         <activity android:name=".activity.RecentReadActivity"/>
+        <activity android:name=".ocr.OCRActivity"/>
+        <activity
+            android:name=".activity.NewNoteActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            />
+        <activity android:name=".activity.NoteBookActivity"/>
 
         <service
             android:name=".DownloadService"

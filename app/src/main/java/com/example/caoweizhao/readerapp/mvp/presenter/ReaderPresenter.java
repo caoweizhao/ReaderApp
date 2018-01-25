@@ -27,8 +27,8 @@ public class ReaderPresenter implements IReaderPresenter {
 
     @Override
     public void loadBookDone(InputStream is) {
-        mView.dismissLoading();
         mView.updatePdfView(is);
+        mView.dismissLoading();
     }
 
     @Override
