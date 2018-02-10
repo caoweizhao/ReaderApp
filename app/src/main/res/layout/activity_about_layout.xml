@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/about_activity_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/text_padding"
+            android:text="知书APP 版本：v1.0.0"
+            android:textColor="#fff"
+            android:textSize="25sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/text_padding"
+            android:text="知书APP是一款阅读学习类APP，帮助你有效阅读学习类相关文件，并且可以写下笔记~"
+            android:textColor="#fff"
+            android:textSize="@dimen/self_page_text_size"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/text_padding"
+            android:text="开发人员：曹伟钊"
+            android:textColor="#fff"
+            android:textSize="@dimen/self_page_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:padding="@dimen/text_padding"
+            android:text="联系方式：123456789"
+            android:textColor="#fff"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/self_page_text_size"
+            />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,12 +1,21 @@
 package com.example.caoweizhao.readerapp.mvp.view;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -36,6 +45,7 @@ public class BookStoreFragment extends BaseFragment implements IBookStoreView {
     BookStoreAdapter mAdapter;
     List<Book> mBooks = new ArrayList<>();
     IBookStorePresenter mPresenter;
+
 
     @Override
     protected int getLayoutId() {
@@ -67,6 +77,8 @@ public class BookStoreFragment extends BaseFragment implements IBookStoreView {
 
         mPresenter = new BookStorePresenter(this);
         mPresenter.getBookStore();
+
+
     }
 
     @Override
@@ -76,7 +88,7 @@ public class BookStoreFragment extends BaseFragment implements IBookStoreView {
 
     @Override
     public void dismissLoading() {
-       mSwipeRefreshLayout.setRefreshing(false);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -88,5 +100,7 @@ public class BookStoreFragment extends BaseFragment implements IBookStoreView {
     public void showMsg(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
+
+
 }
 

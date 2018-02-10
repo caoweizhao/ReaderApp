@@ -3,13 +3,19 @@ package com.example.caoweizhao.readerapp.mvp.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.caoweizhao.readerapp.API.CollectionServices;
+import com.example.caoweizhao.readerapp.Constant;
 import com.example.caoweizhao.readerapp.MyApplication;
 import com.example.caoweizhao.readerapp.R;
 import com.example.caoweizhao.readerapp.adapter.BookShelfAdapter;
@@ -38,12 +44,25 @@ import static com.example.caoweizhao.readerapp.MyApplication.mUser;
 public class BookShelfFragment extends BaseFragment {
     @BindView(R.id.book_shelf_recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.last_read_block)
+    FrameLayout mLastReadBlock;
 
     BookShelfAdapter mAdapter;
     List<Book> mBooks = new ArrayList<>();
 
     CollectionServices mServices;
     List<Disposable> mDisposables = new ArrayList<>();
+
+    float radius = 20;
+    @BindView(R.id.book_shelf_img)
+    ImageView mLastReadBookImg;
+    @BindView(R.id.book_shelf_name)
+    TextView mLastReadBookText;
+    @BindView(R.id.bg_container)
+    View mLastReadBookBG;
+
 
     @Override
     protected int getLayoutId() {
@@ -53,6 +72,7 @@ public class BookShelfFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mLastReadBookBG.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         mServices = RetrofitUtil.getRetrofit()
                 .create(CollectionServices.class);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -68,8 +88,17 @@ public class BookShelfFragment extends BaseFragment {
         });
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_view);
-    }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCollections();
+            }
+        });
 
+        mLastReadBookBG = view.findViewById(R.id.bg_container);
+        mLastReadBookImg = (ImageView) view.findViewById(R.id.book_shelf_img);
+
+    }
 
     @Override
     public void onResume() {
@@ -78,6 +107,7 @@ public class BookShelfFragment extends BaseFragment {
     }
 
     private void getCollections() {
+        mSwipeRefreshLayout.setRefreshing(true);
         mBooks.clear();
         if (mUser == null) {
             mUser = MyApplication.getUser();
@@ -111,11 +141,24 @@ public class BookShelfFragment extends BaseFragment {
                         @Override
                         public void onError(Throwable e) {
                             Log.d("CollectionActivity", e.getMessage());
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
 
                         @Override
                         public void onComplete() {
                             mAdapter.notifyDataSetChanged();
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            if (mBooks.size() == 0) {
+                                mLastReadBlock.setVisibility(View.GONE);
+                            } else {
+                                mLastReadBlock.setVisibility(View.VISIBLE);
+                                Book book = mBooks.get(0);
+                                mLastReadBookText.setText(book.getName());
+                                String url = Constant.BASE_URL + "book/images/" + book.getImg_url();
+                                Glide.with(getContext())
+                                        .load(url)
+                                        .into(mLastReadBookImg);
+                            }
                         }
                     });
         }

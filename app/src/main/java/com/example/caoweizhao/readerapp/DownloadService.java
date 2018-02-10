@@ -84,7 +84,7 @@ public class DownloadService extends Service {
                                     .setContentTitle(task.getFileName())
                                     .setContentText("下载完成！")
                                     .setContentIntent(pendingIntent)
-                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                    .setSmallIcon(R.mipmap.ic_launcher)
                                     .setAutoCancel(true)
                                     .build();
                             NotificationUtil.getInstance(this).showNotification(task.getTaskId(), notification);

@@ -2,14 +2,17 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.2"
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "com.example.caoweizhao.readerapp"
         minSdkVersion 22
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk { abiFilters "armeabi" }
+        renderscriptTargetApi 24
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -47,9 +50,13 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'org.litepal.android:core:1.6.1'
+    implementation 'com.eightbitlab:blurview:1.3.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
     implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
+    implementation files('libs/tbs_sdk_thirdapp_v3.5.0.1004_43500_sharewithdownload_withoutGame_obfs_20170801_113025.jar')
+    implementation files('libs/tbs_sdk_thirdapp_v3.5.0.1004_43500_sharewithdownload_withoutGame_obfs_20170801_113025.jar')
+    implementation 'com.android.support:palette-v7:27.0.2'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

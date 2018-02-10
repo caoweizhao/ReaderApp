@@ -1,12 +1,17 @@
 package com.example.caoweizhao.readerapp.mvp.view;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +20,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.caoweizhao.readerapp.MyApplication;
 import com.example.caoweizhao.readerapp.R;
+import com.example.caoweizhao.readerapp.activity.AboutActivity;
 import com.example.caoweizhao.readerapp.activity.DownloadActivity;
+import com.example.caoweizhao.readerapp.activity.LocalFileListActivity;
 import com.example.caoweizhao.readerapp.activity.RecentReadActivity;
 import com.example.caoweizhao.readerapp.base.BaseFragment;
 import com.example.caoweizhao.readerapp.util.SharePreferenceMgr;
@@ -84,21 +91,27 @@ public class SelfFragment extends BaseFragment {
         mCacheSize.setText(formatFileSize(size));
     }
 
-    @OnClick({R.id.recent_reading, R.id.download_management, R.id.clear_cache, R.id.theme_setting})
+    @OnClick({R.id.recent_reading, R.id.download_management, R.id.clear_cache,
+            R.id.theme_setting, R.id.about_app, R.id.local_file, R.id.functions_introduction,
+            R.id.feedback, R.id.switch_account})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
+            //下载管理
             case R.id.download_management:
                 intent = new Intent(getContext(), DownloadActivity.class);
                 startActivity(intent);
                 break;
+            //最近阅读
             case R.id.recent_reading:
                 intent = new Intent(getContext(), RecentReadActivity.class);
                 startActivity(intent);
                 break;
+            //清空缓存
             case R.id.clear_cache:
                 executeClearCache();
                 break;
+            //主题设置
             case R.id.theme_setting:
                 final int mode = SharePreferenceMgr.getTheme(getContext());
                 int selectedItem = 0;
@@ -130,16 +143,69 @@ public class SelfFragment extends BaseFragment {
                                         (SharePreferenceMgr.THEME_AUTO);
                                 break;
                         }
+                        dialog.dismiss();
                         ((AppCompatActivity) getContext()).recreate();
                     }
                 });
                 mDialogBuilder.create().show();
+                break;
+            //关于应用
+            case R.id.about_app:
+                Intent aboutIntent = new Intent(getContext(), AboutActivity.class);
+                startActivity(aboutIntent);
+                break;
+            //本地文件
+            case R.id.local_file:
+                Intent intent3 = new Intent(getContext(), LocalFileListActivity.class);
+                startActivity(intent3);
+                break;
+            //反馈
+            case R.id.feedback:
+                LayoutInflater inflater = ((Activity) getContext()).getLayoutInflater();
+                View contentView = inflater.inflate(R.layout.feedback_layout, null);
+                final TextInputEditText mTitle = (TextInputEditText) contentView.findViewById(R.id.title_edit_text);
+                final TextInputEditText mContent = (TextInputEditText) contentView.findViewById(R.id.content_edit_text);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                        .setCancelable(false)
+                        .setTitle("邮件反馈")
+                        .setView(contentView)
+                        .setPositiveButton("发送", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String title = mTitle.getText().toString();
+                                String content = mContent.getText().toString();
+                                if (TextUtils.isEmpty(title) || TextUtils.isEmpty(content)) {
+                                    Toast.makeText(getContext(), "请填写完整反馈信息！", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    dialog.dismiss();
+                                    Intent data = new Intent(Intent.ACTION_SENDTO);
+                                    data.setData(Uri.parse("mailto:devimpl0706@gmail.com"));
+                                    data.putExtra(Intent.EXTRA_SUBJECT, title);
+                                    data.putExtra(Intent.EXTRA_TEXT, content);
+                                    startActivity(data);
+                                }
+
+                            }
+                        }).setNegativeButton("取消", null);
+                AlertDialog dialog = builder.create();
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+                break;
+            //功能说明
+            case R.id.functions_introduction:
+                break;
+            //切换账号
+            case R.id.switch_account:
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * 清空缓存
+     */
     private void executeClearCache() {
         AlertDialog dialog = new AlertDialog.Builder(this.getContext())
                 .setTitle("清空缓存")

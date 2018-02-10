@@ -2,7 +2,6 @@ package com.example.caoweizhao.readerapp.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,11 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.caoweizhao.readerapp.API.NoteService;
-import com.example.caoweizhao.readerapp.MyApplication;
 import com.example.caoweizhao.readerapp.R;
+import com.example.caoweizhao.readerapp.RxBus;
 import com.example.caoweizhao.readerapp.base.BaseActivity;
 import com.example.caoweizhao.readerapp.bean.Note;
 import com.example.caoweizhao.readerapp.util.RetrofitUtil;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 
 import java.util.Date;
 
@@ -23,13 +24,14 @@ import butterknife.BindView;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by caoweizhao on 2018-1-25.
+ * Created by caoweizhao on 2018-1-26.
  */
 
-public class NewNoteActivity extends BaseActivity {
+public class ViewNoteActivity extends BaseActivity {
 
     @BindView(R.id.content_edit_text)
     TextInputEditText mContentEditText;
@@ -38,19 +40,18 @@ public class NewNoteActivity extends BaseActivity {
     @BindView(R.id.save)
     TextView mSaveView;
 
+    AlertDialog.Builder mAlertDialogBuilder;
+
     private NoteService mService;
     private int mPage = 0;
     private int mBookId = 0;
 
+    private Note mNote;
     Disposable mDisposable;
-
-    AlertDialog.Builder mAlertDialogBuilder;
-
-    private String mContent;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_new_note;
+        return R.layout.activity_view_note;
     }
 
     @Override
@@ -58,25 +59,47 @@ public class NewNoteActivity extends BaseActivity {
         super.initData();
         setToolbar(R.id.toolbar);
         mAlertDialogBuilder = new AlertDialog.Builder(this)
-                .setTitle("添加笔记")
+                .setTitle("修改笔记")
                 .setCancelable(false);
-        Intent intent = getIntent();
-        mPage = intent.getIntExtra("page", 0);
-        mBookId = intent.getIntExtra("bookId", 0);
-        mContent = intent.getStringExtra("content");
-        mContentEditText.setText(mContent);
+        mNote = getIntent().getParcelableExtra("note");
+        if (mNote != null) {
+            mPage = mNote.getPage();
+            mBookId = mNote.getBookId();
+            mContentEditText.setText(mNote.getContent());
+            mTitleEditText.setText(mNote.getTitle());
+
+        }
         mService = RetrofitUtil.getRetrofit().create(NoteService.class);
     }
 
     @Override
     protected void initEvent() {
         super.initEvent();
+
         mSaveView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveNote();
             }
         });
+        RxTextView.textChangeEvents(mContentEditText)
+                .skipInitialValue()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<TextViewTextChangeEvent>() {
+                    @Override
+                    public void accept(TextViewTextChangeEvent event) throws Exception {
+                        mSaveView.setVisibility(View.VISIBLE);
+                    }
+                });
+        RxTextView.textChangeEvents(mTitleEditText)
+                .skipInitialValue()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<TextViewTextChangeEvent>() {
+                    @Override
+                    public void accept(TextViewTextChangeEvent event) throws Exception {
+                        mSaveView.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     public void saveNote() {
@@ -92,15 +115,11 @@ public class NewNoteActivity extends BaseActivity {
             return;
         }
 
-        Note note = new Note();
-        note.setTitle(title);
-        note.setPage(mPage);
-        note.setBookId(mBookId);
-        note.setContent(content);
-        note.setUserName(MyApplication.getUser().getUser_name());
-        note.setCreateTime(new Date().getTime());
+        mNote.setTitle(title);
+        mNote.setContent(content);
+        mNote.setCreateTime(new Date().getTime());
 
-        mService.addNote(note).subscribeOn(Schedulers.newThread())
+        mService.addNote(mNote).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Note>() {
                     @Override
@@ -115,7 +134,7 @@ public class NewNoteActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        mAlertDialogBuilder.setMessage("添加笔记失败，失败原因：\n" + e.getMessage())
+                        mAlertDialogBuilder.setMessage("保存笔记失败，失败原因：\n" + e.getMessage())
                                 .setNegativeButton("再试一次", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -135,7 +154,8 @@ public class NewNoteActivity extends BaseActivity {
 
                     @Override
                     public void onComplete() {
-                        mAlertDialogBuilder.setMessage("添加笔记完成")
+                        RxBus.get().post(mNote);
+                        mAlertDialogBuilder.setMessage("保存成功！")
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -147,13 +167,5 @@ public class NewNoteActivity extends BaseActivity {
                                 .show();
                     }
                 });
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mDisposable != null) {
-            mDisposable.dispose();
-        }
-        super.onDestroy();
     }
 }

@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/book_store_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.caoweizhao.readerapp.activity.LoginActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/crop_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="30dp"
+        >
+
+        <ImageView
+            android:id="@+id/book_detail_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_app_icon"
+            />
+    </LinearLayout>
+</LinearLayout>

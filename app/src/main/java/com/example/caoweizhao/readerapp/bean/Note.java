@@ -132,4 +132,14 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Note) {
+            if (((Note) obj).getId() == this.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

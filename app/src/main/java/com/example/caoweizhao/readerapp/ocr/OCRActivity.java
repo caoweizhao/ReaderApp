@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
 import com.example.caoweizhao.readerapp.R;
+import com.example.caoweizhao.readerapp.activity.NewNoteActivity;
 import com.example.caoweizhao.readerapp.base.BaseActivity;
 import com.example.caoweizhao.readerapp.bean.OCR_result;
 import com.example.caoweizhao.readerapp.util.FileUtil;
@@ -49,6 +51,11 @@ public class OCRActivity extends BaseActivity {
     TextView mResultText;
     @BindView(R.id.loading_progress)
     ProgressBar mProgressBar;
+    @BindView(R.id.new_note)
+    ImageView mNewNote;
+
+    private int mBookId;
+    private int mPage;
 
     @Override
     protected void initData() {
@@ -57,6 +64,9 @@ public class OCRActivity extends BaseActivity {
         alertDialog = new AlertDialog.Builder(this);
         showLoading();
         initAccessTokenWithAkSk();
+        Intent intent = getIntent();
+        mPage = intent.getIntExtra("page", 0);
+        mBookId = intent.getIntExtra("bookId", 0);
     }
 
     @Override
@@ -106,6 +116,7 @@ public class OCRActivity extends BaseActivity {
                                         OCR_result ocr_result = gson.fromJson(result, OCR_result.class);
                                         String parseResult = parseResult(ocr_result);
                                         mResultText.setText(parseResult);
+                                        mNewNote.setVisibility(View.VISIBLE);
                                         dismissLoading();
                                     }
                                 });
@@ -314,5 +325,13 @@ public class OCRActivity extends BaseActivity {
 
     private void dismissLoading() {
         mProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void newNote(View view) {
+        Intent intent = new Intent(OCRActivity.this, NewNoteActivity.class);
+        intent.putExtra("page", mPage);
+        intent.putExtra("bookId", mBookId);
+        intent.putExtra("content", mResultText.getText().toString());
+        startActivity(intent);
     }
 }

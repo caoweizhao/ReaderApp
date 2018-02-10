@@ -3,4 +3,8 @@
     <color name="colorPrimary">#9da49d</color>
     <color name="colorPrimaryDark">#485048</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="scrim">#dd323232</color>
+    <color name="colorOverlay">#caa</color>
+
 </resources>

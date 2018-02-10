@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.caoweizhao.readerapp.API.NoteService;
 import com.example.caoweizhao.readerapp.R;
+import com.example.caoweizhao.readerapp.RxBus;
 import com.example.caoweizhao.readerapp.adapter.NoteBookAdapter;
 import com.example.caoweizhao.readerapp.base.BaseActivity;
 import com.example.caoweizhao.readerapp.bean.Note;
@@ -25,6 +27,7 @@ import butterknife.BindView;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
@@ -81,6 +84,20 @@ public class NoteBookActivity extends BaseActivity {
     @Override
     protected void initEvent() {
         super.initEvent();
+
+        RxBus.get().toFlowable().subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+                Log.d("NoteBookActivity", "accept");
+                if (o instanceof Note) {
+                    int index = mNoteList.indexOf(o);
+                    Log.d("NoteBookActivity", "accept" + index);
+                    mNoteList.set(index, (Note) o);
+                    mAdapter.notifyItemChanged(index);
+                }
+            }
+        });
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -92,6 +109,14 @@ public class NoteBookActivity extends BaseActivity {
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
                 mSelectedPosition = position;
                 return false;
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent = new Intent(NoteBookActivity.this, ViewNoteActivity.class);
+                intent.putExtra("note", mNoteList.get(position));
+                startActivity(intent);
             }
         });
         mSortTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

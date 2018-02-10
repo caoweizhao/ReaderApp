@@ -42,8 +42,9 @@ import java.util.List;
 import butterknife.BindView;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -71,6 +72,8 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
     Book mBook;
     boolean isDownloaded;
     private File mTempFile;
+
+    private Disposable mDisposable;
 
     @Override
     protected int getLayoutId() {
@@ -217,11 +220,26 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<File>() {
+                .subscribe(new Observer<File>() {
                     @Override
-                    public void accept(File file) throws Exception {
-                        PDFView.Configurator configurator = mPDFView.fromFile(file);
+                    public void onSubscribe(Disposable d) {
+                        mDisposable = d;
+                    }
+
+                    @Override
+                    public void onNext(File value) {
+                        PDFView.Configurator configurator = mPDFView.fromFile(value);
                         loadBook(configurator);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
 
@@ -236,6 +254,9 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
     protected void onDestroy() {
         if (mPresenter != null) {
             mPresenter.onDetach();
+        }
+        if (mDisposable != null) {
+            mDisposable.dispose();
         }
         storeProgress();
         super.onDestroy();
@@ -296,7 +317,6 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
     }
 
     public void orcTest(View view) {
-        Log.d("ReaderActivity", "orcTest");
         try {
             FileOutputStream fileOutputStream = null;
             fileOutputStream = new FileOutputStream(FileUtil.getSaveFile(MyApplication.getmContext()));
@@ -306,6 +326,8 @@ public class ReaderActivity extends BaseActivity implements IReaderView {
             fileOutputStream.close();
             mPDFView.setDrawingCacheEnabled(false);
             Intent intent = new Intent(ReaderActivity.this, OCRActivity.class);
+            intent.putExtra("page", mLastPage);
+            intent.putExtra("bookId", mBook.getId());
             startActivity(intent);
         } catch (IOException e) {
             e.printStackTrace();

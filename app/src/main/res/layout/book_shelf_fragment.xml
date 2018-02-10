@@ -4,11 +4,61 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/last_read_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/book_shelf_recycler_view"
+        <LinearLayout
+            android:id="@+id/bg_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <ImageView
+                android:id="@+id/book_shelf_img"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/pic"/>
+
+            <TextView
+                android:id="@+id/book_shelf_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/book_shelf_item_text_padding"
+                android:text="这是书名"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:text="最近加入："
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:textColor="?android:attr/textColorSecondary"
+            />
+
+    </FrameLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/book_shelf_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

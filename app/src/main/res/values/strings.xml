@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ReaderApp</string>
+    <string name="app_name">知书</string>
 
     <string name="book_shelf_page">书架</string>
     <string name="book_page">书城</string>
@@ -10,10 +10,17 @@
         <item>夜间模式</item>
         <item>自动</item>
     </string-array>
+
     <string-array name="note_book_sort_type">
         <item>按页码</item>
         <item>按时间</item>
     </string-array>
 
-
+    <string-array name="local_file_type">
+        <item>PDF</item>
+        <item>WORD</item>
+        <item>EXCEL</item>
+        <item>PPT</item>
+        <item>TXT</item>
+    </string-array>
 </resources>

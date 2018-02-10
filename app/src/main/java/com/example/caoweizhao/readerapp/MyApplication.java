@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.example.caoweizhao.readerapp.bean.User;
 import com.example.caoweizhao.readerapp.util.SharePreferenceMgr;
+import com.tencent.smtt.sdk.QbSdk;
 
 import org.litepal.LitePal;
 
@@ -26,6 +27,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        QbSdk.initX5Environment(this, null);
         int mode = SharePreferenceMgr.getTheme(this);
         setThemeMode(mode);
     }

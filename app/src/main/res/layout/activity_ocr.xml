@@ -28,13 +28,25 @@
                 android:textSize="18sp"
                 />
 
+            <ImageView
+                android:id="@+id/new_note"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/ic_new_note"
+                android:onClick="newNote"
+                android:visibility="gone"
+                />
+
         </android.support.v7.widget.Toolbar>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/text_padding"
-            android:text="识别结果：(长按复制)"
+            android:text="识别结果：(长按复制,点击右上角创建笔记）"
             android:textColor="?android:attr/textColorSecondary"
             />
 
@@ -42,12 +54,13 @@
             android:id="@+id/result_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#369797"
+            android:background="?android:attr/colorBackground"
             android:padding="@dimen/text_padding"
             android:textColor="?android:attr/textColorSecondary"
             android:textIsSelectable="true"
             />
     </LinearLayout>
+
     <ProgressBar
         android:id="@+id/loading_progress"
         android:layout_width="wrap_content"

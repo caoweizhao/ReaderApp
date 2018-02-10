@@ -8,6 +8,7 @@
         android:id="@+id/book_store_swiprefreshlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/book_shelf_recycler_view"
             android:layout_width="match_parent"

@@ -15,4 +15,5 @@ public class Constant {
     public static final String ACTION_UPDTATE = "UPDATE";
     public static final String ACTION_DONE = "DONE";
 
+    public static final String TAMP_FILE_DIR = "/storage/emulated/0/TbsReaderTemp";
 }
