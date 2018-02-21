@@ -97,6 +97,12 @@ public class NoteBookActivity extends BaseActivity {
                 }
             }
         });
+        /*RxBus.get().toFlowable(Note.class).subscribe(new Consumer<Note>() {
+            @Override
+            public void accept(Note note) throws Exception {
+
+            }
+        });*/
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

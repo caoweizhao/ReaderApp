@@ -7,7 +7,6 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -46,7 +45,6 @@ public class BookStoreAdapter extends BaseQuickAdapter<Book, BaseViewHolder> {
         helper.setText(R.id.item_book_name, item.getName());
         ImageView imageView = (ImageView) helper.itemView.findViewById(R.id.item_book_img);
         String url = Constant.BASE_URL + "book/images/" + item.getImg_url();
-        Log.d("BookStoreAdapter", url);
         Glide.with(mFragment)
                 .load(url)
                 .into(imageView);

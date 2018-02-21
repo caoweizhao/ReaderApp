@@ -6,5 +6,5 @@ package com.example.caoweizhao.readerapp.mvp.model;
 
 public interface IBookStoreModel extends StopableModel {
 
-    void getBookStore();
+    void getBookStore(String category);
 }

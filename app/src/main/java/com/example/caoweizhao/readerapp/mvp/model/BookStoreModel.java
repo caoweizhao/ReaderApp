@@ -29,9 +29,9 @@ public class BookStoreModel extends BaseModel<IBookStorePresenter> implements IB
     }
 
     @Override
-    public void getBookStore() {
-        Log.d("BookStoreModel","getBookStore");
-        mService.getBooks()
+    public void getBookStore(String category) {
+        Log.d("BookStoreModel", "getBookStore");
+        mService.getBooks(category)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Book>>() {

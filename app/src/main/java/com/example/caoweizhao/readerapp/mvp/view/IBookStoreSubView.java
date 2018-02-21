@@ -8,7 +8,7 @@ import java.util.List;
  * Created by caoweizhao on 2017-9-22.
  */
 
-public interface IBookStoreView {
+public interface IBookStoreSubView {
 
     void showLoading();
 

@@ -3,7 +3,7 @@ package com.example.caoweizhao.readerapp.mvp.presenter;
 import com.example.caoweizhao.readerapp.bean.Book;
 import com.example.caoweizhao.readerapp.mvp.model.BookStoreModel;
 import com.example.caoweizhao.readerapp.mvp.model.IBookStoreModel;
-import com.example.caoweizhao.readerapp.mvp.view.IBookStoreView;
+import com.example.caoweizhao.readerapp.mvp.view.IBookStoreSubView;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ import java.util.List;
 public class BookStorePresenter implements IBookStorePresenter {
 
     private IBookStoreModel mModel;
-    private IBookStoreView mView;
+    private IBookStoreSubView mView;
 
-    public BookStorePresenter(IBookStoreView view) {
+    public BookStorePresenter(IBookStoreSubView view) {
         onAttach(view);
     }
 
     @Override
-    public void onAttach(IBookStoreView view) {
+    public void onAttach(IBookStoreSubView view) {
         mView = view;
         mModel = new BookStoreModel(this);
     }
@@ -31,9 +31,9 @@ public class BookStorePresenter implements IBookStorePresenter {
         mView = null;
     }
 
-    public void getBookStore() {
+    public void getBookStore(String category) {
         mView.showLoading();
-        mModel.getBookStore();
+        mModel.getBookStore(category);
     }
 
     @Override

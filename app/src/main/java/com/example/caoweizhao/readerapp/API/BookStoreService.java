@@ -16,6 +16,7 @@ public interface BookStoreService {
 
     /**
      * 获取图片
+     *
      * @param path
      */
     @GET("book/images/{path}")
@@ -23,8 +24,9 @@ public interface BookStoreService {
 
     /**
      * 获取图书
+     *
      * @return
      */
-    @GET("book/books")
-    Observable<List<Book>> getBooks();
+    @GET("book/books/category/{category}")
+    Observable<List<Book>> getBooks(@Path("category") String category);
 }
